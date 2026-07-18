@@ -1,0 +1,9 @@
+ROOT0-DLW-CHAIN-v1
+index : 1443
+slug  : the-mediator
+seal  : 74793bfff94110efe078da2774961bbfa63195c99cc1e041fe2179e697ca60a2
+prev  : ebb82352e886bc1fc4306a3d79546bf3eee8195a908526b209cbbbf3556d59a2
+link  : 25f2d70fd71d9bf515d90a946f0b711aaf734d843de98fccb276e249f7eb73b2
+head  : 672a9bd5f158570e0ffe47b3378a6bd8042f44b32e5d7dcd516fce488937ebcb
+
+— the tether: link = sha256(index|slug|seal|prev). the chain head commits to the whole corpus.
