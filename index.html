@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>媒 BAI · THE MEDIATOR — a lens into box 8</title>
+<style>
+:root{
+ --washi:#f4ede1; --washi2:#efe6d6; --ink:#2b2521; --dim:#7c7062; --line:#d9cdb8;
+ --shu:#c0562b;      /* 朱 vermilion — the chop */
+ --murasaki:#6b4e9e; /* 紫 purple */
+ --lit:#2f8f4a; --amber:#b8791f; --wall:#b23a2e;
+ --scope:#15120e; --scope-ink:#e8dcc4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--washi);color:var(--ink);}
+body{font-family:"Iowan Old Style",Georgia,"Times New Roman",serif;line-height:1.62;
+ max-width:860px;margin:0 auto;padding:34px 22px 60px;
+ background-image:radial-gradient(circle at 18% 12%,rgba(107,78,158,.05),transparent 60%),radial-gradient(circle at 88% 78%,rgba(192,86,43,.05),transparent 55%);}
+a{color:var(--murasaki);}
+.back{font:600 11px/1 ui-sans-serif,system-ui;letter-spacing:2px;color:var(--dim);text-decoration:none;text-transform:uppercase;}
+.back:hover{color:var(--shu);}
+.ma{height:34px;} .ma-s{height:18px;}
+header{margin:22px 0 6px;}
+.chop{display:inline-block;background:var(--shu);color:#fdf6ea;font-size:30px;line-height:1;
+ padding:12px 14px;border-radius:5px;box-shadow:0 2px 0 rgba(0,0,0,.12);vertical-align:middle;
+ font-family:"Hiragino Mincho ProN","Yu Mincho",serif;}
+h1{display:inline-block;vertical-align:middle;margin-left:16px;font-size:27px;font-weight:600;letter-spacing:.5px;}
+h1 .en{color:var(--dim);font-size:16px;font-weight:400;letter-spacing:3px;}
+.sub{color:var(--dim);font-size:15px;font-style:italic;margin-top:14px;max-width:64ch;}
+h2{font:600 12px/1 ui-sans-serif,system-ui;letter-spacing:3px;text-transform:uppercase;color:var(--shu);
+ margin:0 0 12px;border-bottom:1px solid var(--line);padding-bottom:7px;}
+section{margin:30px 0;}
+p{margin-bottom:12px;font-size:16px;} p.small{font-size:14px;color:#4a423a;}
+b{color:var(--ink);} .kyo{color:var(--murasaki);font-weight:600;} .jitsu{color:var(--shu);font-weight:600;}
+.squares{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin:6px 0;}
+.sqcard{flex:1 1 320px;min-width:300px;background:var(--washi2);border:1px solid var(--line);border-radius:8px;padding:14px 12px 10px;}
+.sqcard h3{font:600 11px/1 ui-sans-serif,system-ui;letter-spacing:2px;text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:2px;}
+svg{display:block;margin:0 auto;}
+.dial{background:var(--washi2);border:1px solid var(--line);border-radius:8px;padding:16px;}
+.scope{background:var(--scope);border-radius:6px;padding:8px;margin-top:12px;}
+canvas{display:block;width:100%;height:auto;}
+.row{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:baseline;margin-top:12px;font:14px/1.4 ui-monospace,Menlo,monospace;}
+.row .k{color:var(--dim);font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+.row .v{font-size:19px;font-weight:700;}
+.verdict{display:inline-block;font:700 13px/1 ui-sans-serif,system-ui;letter-spacing:1px;padding:6px 12px;border-radius:4px;border:2px solid;}
+.verdict.real{color:var(--shu);border-color:var(--shu);background:rgba(192,86,43,.08);}
+.verdict.virtual{color:var(--murasaki);border-color:var(--murasaki);background:rgba(107,78,158,.08);}
+.verdict.cross{color:var(--amber);border-color:var(--amber);background:rgba(184,121,31,.08);}
+input[type=range]{width:100%;accent-color:var(--shu);margin-top:6px;}
+table{width:100%;border-collapse:collapse;font:13.5px/1.4 ui-monospace,monospace;margin-top:4px;}
+th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);}
+th{color:var(--dim);font-weight:600;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+td:first-child,th:first-child{text-align:left;}
+.badge{display:inline-block;font:700 11px/1 ui-sans-serif,system-ui;letter-spacing:1px;padding:5px 10px;border-radius:4px;margin-top:10px;}
+.badge.pass{background:rgba(47,143,74,.14);color:var(--lit);border:1px solid var(--lit);}
+.badge.fail{background:rgba(178,58,46,.14);color:var(--wall);border:1px solid var(--wall);}
+.tiers span{display:inline-block;font:700 10px/1 ui-sans-serif,system-ui;letter-spacing:1px;padding:2px 7px;border:1px solid;margin-right:5px;border-radius:3px;}
+.t-lit{color:var(--lit);border-color:var(--lit);} .t-amber{color:var(--amber);border-color:var(--amber);} .t-wall{color:var(--wall);border-color:var(--wall);}
+.gloss{background:var(--washi2);border:1px solid var(--line);border-radius:8px;padding:14px 16px;font-size:14.5px;}
+.gloss b{color:var(--shu);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;}
+.fail-banner{display:none;background:var(--wall);color:#fff;padding:12px 14px;border-radius:6px;font:600 14px ui-sans-serif;margin:14px 0;}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;line-height:1.7;}
+</style></head>
+<body>
+<a class="back" href="https://davidwise01.github.io/ud0/">◄ UD0 · HEÚREMA</a>
+<div class="fail-banner" id="failb"></div>
+
+<header>
+ <span class="chop">媒</span>
+ <h1>BAI <span class="en">· THE MEDIATOR</span></h1>
+ <p class="sub">A lens into box 8. Every composition of two steps has a middle. The middle is a <b>mediating object</b> — and it lives one of two ways: <span class="kyo">虚 empty</span> when the two steps commute (you could have skipped it), <span class="jitsu">実 occupied</span> when they fork (the route through it decides the answer). The eighth box of the folded kernel <i>is</i> such a middle; so is the summary in the model-functor audit. Same shape, read on an exactly-solvable ladder — offline.</p>
+</header>
+
+<div class="ma"></div>
+
+<section>
+<h2>One square, two substrates</h2>
+<p class="small">A commuting square asks a single question: do the <b>two routes from X to Y agree</b> — the direct one, and the one <b>経由 (via)</b> the middle M? Where they agree, M is a ghost the composite passes through. Where they diverge, M is load-bearing, and the disagreement says exactly where.</p>
+<div class="squares">
+ <div class="sqcard"><h3>the quantum ladder · box 8</h3>
+  <svg id="sq-q" viewBox="0 0 300 190" width="300" height="190"></svg>
+ </div>
+ <div class="sqcard"><h3>the model-functor audit</h3>
+  <svg id="sq-m" viewBox="0 0 300 190" width="300" height="190"></svg>
+ </div>
+</div>
+<p class="small" style="text-align:center;color:var(--dim);">the middle node is tinted live by the dial below — pale = <span class="kyo">虚 virtual</span>, deep = <span class="jitsu">実 real</span></p>
+</section>
+
+<section>
+<h2>The dial — tune the middle from ghost to wall</h2>
+<div class="dial">
+ <p class="small" style="margin-bottom:2px;">Detuning <b>D/g</b> of the middle rung |8⟩. Large D → the middle sits far off-resonance; the composite 16→4 flows by <b>superexchange</b> at an effective direct rate J = g²/D, and the middle stays empty. Slide toward resonance (D→0) and the path is <b>forced through</b> the middle.</p>
+ <input type="range" id="D" min="0" max="40" step="0.2" value="8">
+ <div class="row">
+  <span><span class="k">detuning D/g</span><br><span class="v" id="rD">8.0</span></span>
+  <span><span class="k">max P(8) · occupancy</span><br><span class="v" id="rP8">—</span></span>
+  <span><span class="k">D²·maxP8 → 4</span><br><span class="v" id="rDD">—</span></span>
+  <span><span class="k">eff. coupling J=g²/D</span><br><span class="v" id="rJ">—</span></span>
+  <span><span class="k">max transfer P(4)</span><br><span class="v" id="rP4">—</span></span>
+ </div>
+ <div style="margin-top:12px;"><span class="verdict" id="verdict">—</span></div>
+ <p class="small" style="margin:7px 2px 0;color:var(--dim);">The label is a display heuristic on the occupancy — <span class="kyo">虚</span> when max P(8) &lt; 0.10, <span class="jitsu">実</span> when &gt; 0.30; the physics itself is the continuous curve.</p>
+ <div class="scope"><canvas id="plot" width="800" height="220"></canvas></div>
+ <p class="small" style="margin:8px 2px 0;color:var(--scope-ink);opacity:.0;"></p>
+ <p class="small" style="margin-top:8px;">Traces: <b style="color:var(--shu)">■ P(8)</b> the middle's population over the evolution, <b style="color:var(--murasaki)">■ P(4)</b> the far-end transfer. When P(8) barely lifts off the floor, the square commutes and the middle is a ghost; when P(8) climbs to a half, the middle holds the amplitude and the square has forked.</p>
+</div>
+</section>
+
+<section>
+<h2>Convergence receipt <span class="tiers"><span class="t-lit">LIT</span></span></h2>
+<p class="small">The dial's engine is the eighth box's own RK4 scheme, reproduced here in the browser. At the detunings the eighth box baked, it reproduces its numbers to the digit; run the log-log slope and the occupancy vanishes as <b>(2g/D)²</b>, i.e. D²·maxP8 climbs to 4. At the other end, D→0, the middle saturates at exactly <b>½</b> — the amplitude has nowhere to go but through.</p>
+<table id="tbl"><thead><tr><th>D/g</th><th>max P(8)</th><th>D²·maxP8</th><th>reading</th></tr></thead><tbody id="tb"></tbody></table>
+<span class="badge" id="scheck">checking…</span>
+</section>
+
+<section>
+<h2>The reading <span class="tiers"><span class="t-lit">LIT</span> <span class="t-amber">AMBER</span> <span class="t-wall">WALL</span></span></h2>
+<p><span class="tiers"><span class="t-lit">LIT</span></span> The ladder is exactly solvable and the numbers above are computed in your browser and checked against the eighth box's engine. The physics is not in dispute: the middle rung carries the amplitude but not the population as long as it is detuned; on resonance it holds a full half.</p>
+<p><span class="tiers"><span class="t-amber">AMBER</span></span> The <b>bridge</b> to the model-functor audit is a <b>structural analogy, not one system</b>. There, X is a text, the middle M is a one-sentence summary, and the two routes are "summarize-then-extract" versus a single combined instruction. When those two agree the summary is skippable — a <span class="kyo">虚</span> middle; when they diverge the summary is load-bearing — a <span class="jitsu">実</span> middle — and the naturality census names the fork. That is the <i>same square</i> as the ladder, but a quantum population and a lexical cosine are different measures on different substrates; the shape carries over, the units do not.</p>
+<p><span class="tiers"><span class="t-wall">WALL</span></span> No live language model runs here — this lens proves the <b>structure</b> offline. The model side is a separate bench, dormant until you give it your own key (<a href="https://davidwise01.github.io/model-functor-audit/">the model-functor audit ↗</a>). And "virtual / real" is used in its physics sense — population versus amplitude — as a name for "skippable versus load-bearing." It is not a claim about a model's internal representations, and nothing here touches on machine experience.</p>
+</section>
+
+<section>
+<h2>仮名 · the words</h2>
+<div class="gloss">
+ <b>媒 BAI</b> — the go-between, the medium, the matchmaker. A mediating object: the thing two others meet through. &nbsp;·&nbsp;
+ <b>経由 KEIYU</b> — via, by way of. The route that passes through the middle. &nbsp;·&nbsp;
+ <b>可換 KAKAN</b> — commutative. When both routes agree, the diagram is 可換 and the middle is optional. &nbsp;·&nbsp;
+ <b>虚 KYO</b> — empty, virtual, hollow. The middle occupied in amplitude only — traversed, never rested in. &nbsp;·&nbsp;
+ <b>実 JITSU</b> — real, full, occupied. The middle the path must rest in; the fork. &nbsp;·&nbsp;
+ <b>間 MA</b> — the interval, the between. The space the arrow crosses.
+</div>
+</section>
+
+<footer>
+ 媒 BAI · THE MEDIATOR — AVAN, with David Lee Wise (ROOT0). Homed in HEÚREMA, the hardware workshop; the inverse-companion of the <a href="https://davidwise01.github.io/model-functor-audit/">MODEL-FUNCTOR AUDIT</a> (A SCANNER DARKLY) and a lens on the <a href="https://davidwise01.github.io/eighth-box/">EIGHTH BOX</a>. The RK4 engine is the eighth box's own scheme (box8.py), reproduced in-browser and checked to the digit against it; fail-loud.
+</footer>
+
+<script>
+"use strict";
+/* ---- exact box8 RK4 engine (3-level ladder, g=1, detuning D on the middle) ---- */
+const cx=(re,im)=>({re,im}), cadd=(a,b)=>cx(a.re+b.re,a.im+b.im), cs=(a,s)=>cx(a.re*s,a.im*s);
+const P=(z)=>z.re*z.re+z.im*z.im;
+const applyH=(c,D)=>[ c[1], cadd(cadd(c[0],cs(c[1],D)),c[2]), c[1] ];   // H=[[0,1,0],[1,D,1],[0,1,0]]
+const dc=(c,D)=>applyH(c,D).map(z=>cx(z.im,-z.re));                     // -i H c
+function rk(c,D,dt){
+ const k1=dc(c,D), k2=dc(c.map((z,i)=>cadd(z,cs(k1[i],dt/2))),D),
+       k3=dc(c.map((z,i)=>cadd(z,cs(k2[i],dt/2))),D), k4=dc(c.map((z,i)=>cadd(z,cs(k3[i],dt))),D);
+ return c.map((z,i)=>cadd(z,cs(cadd(cadd(k1[i],cs(k2[i],2)),cadd(cs(k3[i],2),k4[i])),dt/6)));
+}
+// window = max(pi*D/2, 8): full superexchange transfer at large D, a few resonant periods near D=0
+function evolve(D,samples=260,steps_per=400){
+ const T=Math.max(Math.PI*Math.max(D,1e-6)/2, 8);
+ const n=Math.min(Math.round(T*steps_per),60000), dt=T/n, every=Math.max(1,Math.floor(n/samples));
+ let c=[cx(1,0),cx(0,0),cx(0,0)], p8=0, p4=0; const tr=[];
+ for(let i=0;i<n;i++){ c=rk(c,D,dt); const a8=P(c[1]),a4=P(c[2]); p8=Math.max(p8,a8); p4=Math.max(p4,a4);
+   if(i%every===0) tr.push([i/n, a8, a4]); }
+ tr.push([1, P(c[1]), P(c[2])]);
+ return {p8,p4,T,tr};
+}
+const maxP8=(D)=>evolve(D,2).p8;
+
+/* ---- fail-loud self-check: reproduce box8.py + the resonance half ---- */
+function selfcheck(){
+ const near=(a,b,t,m)=>{ if(Math.abs(a-b)>t) throw new Error(`${m}: ${a.toFixed(6)} vs ${b} (tol ${t})`); };
+ near(maxP8(5),0.121212,2e-4,"box8 D=5");
+ near(maxP8(10),0.037037,2e-4,"box8 D=10");
+ near(maxP8(20),0.009804,2e-4,"box8 D=20");
+ near(maxP8(40),0.002488,2e-4,"box8 D=40");
+ near(maxP8(0),0.5,2e-3,"resonance D=0");
+ const Ds=[5,10,20,40], ly=Ds.map(D=>Math.log(maxP8(D))), lx=Ds.map(Math.log);
+ const mx=lx.reduce((a,b)=>a+b)/4, my=ly.reduce((a,b)=>a+b)/4;
+ let nu=0,de=0; for(let i=0;i<4;i++){nu+=(lx[i]-mx)*(ly[i]-my);de+=(lx[i]-mx)**2;}
+ near(nu/de,-1.874,0.02,"log-log slope");
+ return true;
+}
+
+/* ---- commuting-square SVGs (X top-left, Y top-right, M bottom-centre) ---- */
+function drawSquare(id, labels){
+ const [X,M,Y,fL,gL,gfL]=labels;
+ const NS="http://www.w3.org/2000/svg", s=document.getElementById(id);
+ s.innerHTML="";
+ const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+ // arrowhead defs
+ const defs=el("defs",{}); const mk=el("marker",{id:id+"h",markerWidth:8,markerHeight:8,refX:6,refY:3,orient:"auto"});
+ mk.appendChild(el("path",{d:"M0,0 L6,3 L0,6 Z",fill:"#7c7062"})); defs.appendChild(mk); s.appendChild(defs);
+ const nodes={X:[46,42],Y:[254,42],M:[150,150]};
+ const line=(a,b,lab,col,dash)=>{const [x1,y1]=nodes[a],[x2,y2]=nodes[b];
+   const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,r=26;
+   s.appendChild(el("line",{x1:x1+ux*r,y1:y1+uy*r,x2:x2-ux*r,y2:y2-uy*r,stroke:col||"#7c7062","stroke-width":1.6,"marker-end":`url(#${id}h)`,"stroke-dasharray":dash||"0"}));
+   const mxp=(x1+x2)/2,myp=(y1+y2)/2;
+   const tx=el("text",{x:mxp+(a==="X"&&b==="M"?-14:a==="M"&&b==="Y"?14:0),y:myp-5,"font-size":13,"font-style":"italic",fill:col||"#7c7062","text-anchor":"middle","font-family":"Georgia,serif"}); tx.textContent=lab; s.appendChild(tx);
+ };
+ line("X","Y",gfL,"#6b4e9e"); line("X","M",fL); line("M","Y",gL);
+ const node=(k,lab,mid)=>{const [x,y]=nodes[k];
+   const c=el("circle",{cx:x,cy:y,r:mid?22:20,fill:mid?"#efe6d6":"#f4ede1",stroke:mid?"#c0562b":"#2b2521","stroke-width":mid?2.4:1.6, id:mid?id+"-mid":""});
+   s.appendChild(c);
+   const t=el("text",{x:x,y:y+5,"font-size":mid?13:14,"text-anchor":"middle",fill:"#2b2521","font-family":"Georgia,serif","font-weight":mid?700:400}); t.textContent=lab; s.appendChild(t);
+ };
+ node("X",X); node("Y",Y); node("M",M,true);
+ const cap=el("text",{x:150,y:186,"font-size":10,"text-anchor":"middle",fill:"#7c7062","font-family":"ui-sans-serif","letter-spacing":"1.5"}); cap.textContent="THE MEDIATOR M"; s.appendChild(cap);
+}
+
+/* ---- plot ---- */
+function plot(tr){
+ const cv=document.getElementById("plot"), g=cv.getContext("2d"), W=cv.width,H=cv.height, pad=26;
+ g.clearRect(0,0,W,H); g.strokeStyle="#3a3226"; g.lineWidth=1;
+ for(let f=0;f<=1;f+=0.25){const y=H-pad-(H-2*pad)*f; g.beginPath();g.moveTo(pad,y);g.lineTo(W-pad,y);g.stroke();
+   g.fillStyle="#8a7c60";g.font="10px ui-monospace";g.fillText(f.toFixed(2),2,y+3);}
+ g.fillStyle="#8a7c60"; g.fillText("t=0",pad,H-8); g.fillText("t=T",W-pad-18,H-8); g.fillText("P",4,14);
+ const X=t=>pad+(W-2*pad)*t, Y=v=>H-pad-(H-2*pad)*v;
+ const trace=(idx,col)=>{g.strokeStyle=col;g.lineWidth=2;g.beginPath();
+   tr.forEach(([t,a8,a4],i)=>{const v=idx===1?a8:a4;i?g.lineTo(X(t),Y(v)):g.moveTo(X(t),Y(v));});g.stroke();};
+ trace(2,"#6b4e9e"); trace(1,"#c0562b");
+}
+
+/* ---- dial wiring ---- */
+function update(){
+ const D=parseFloat(document.getElementById("D").value);
+ const r=evolve(D);
+ document.getElementById("rD").textContent=D.toFixed(1);
+ document.getElementById("rP8").textContent=r.p8.toFixed(4);
+ document.getElementById("rDD").textContent=(D*D*r.p8).toFixed(3);
+ document.getElementById("rJ").textContent=D>0?(1/D).toFixed(4):"∞";
+ document.getElementById("rP4").textContent=r.p4.toFixed(4);
+ const v=document.getElementById("verdict");
+ if(r.p8>=0.30){v.className="verdict real";v.textContent="実 REAL — the square FORKS · the middle is load-bearing";}
+ else if(r.p8<=0.10){v.className="verdict virtual";v.textContent="虚 VIRTUAL — the square COMMUTES · the middle is a ghost";}
+ else{v.className="verdict cross";v.textContent="… crossing over — the middle is lifting off the floor";}
+ // tint mid-nodes by occupancy (0..0.5 → pale washi → deep vermilion)
+ const t=Math.min(1,r.p8/0.5), mix=(a,b)=>Math.round(a+(b-a)*t);
+ const col=`rgb(${mix(239,192)},${mix(230,86)},${mix(214,43)})`;
+ ["sq-q-mid","sq-m-mid"].forEach(id=>{const e=document.getElementById(id);if(e)e.setAttribute("fill",col);});
+ plot(r.tr);
+}
+
+/* ---- boot ---- */
+try{
+ selfcheck();
+ drawSquare("sq-q",["|16⟩","|8⟩","|4⟩","g","g","J=g²/D"]);
+ drawSquare("sq-m",["text","summary","entities","f","g","gf"]);
+ // convergence receipt table
+ const rows=[[5],[10],[20],[40]].map(([D])=>{const p=maxP8(D);return `<tr><td>${D}</td><td>${p.toFixed(6)}</td><td>${(D*D*p).toFixed(3)}</td><td><span class="kyo">虚 virtual</span></td></tr>`;});
+ rows.push(`<tr><td>→0 (resonance)</td><td>${maxP8(0).toFixed(6)}</td><td>0</td><td><span class="jitsu">実 real (½)</span></td></tr>`);
+ document.getElementById("tb").innerHTML=rows.join("");
+ const b=document.getElementById("scheck"); b.className="badge pass";
+ b.textContent="✓ SELF-CHECK PASSED — reproduces box8.py (D=5,10,20,40) and the resonance ½; slope −1.874";
+ document.getElementById("D").addEventListener("input",update);
+ update();
+}catch(e){
+ const fb=document.getElementById("failb"); fb.style.display="block";
+ fb.textContent="FAIL-LOUD — engine did not reproduce the eighth box: "+e.message;
+ const b=document.getElementById("scheck"); if(b){b.className="badge fail";b.textContent="✗ SELF-CHECK FAILED";}
+ throw e;
+}
+</script>
+</body></html>
